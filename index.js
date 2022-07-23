@@ -4,8 +4,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 // const api = require('@serverless/cloud');
-const Sentry = require('@sentry/node');
-const Tracing = require('@sentry/tracing');
+// const Sentry = require('@sentry/node');
+// const Tracing = require('@sentry/tracing');
 
 // const logger = require('./loggerMiddleware');
 const app = express();
@@ -18,25 +18,25 @@ app.use(express.json());
 // app.use(logger);
 app.use('/static', express.static('public'));
 
-Sentry.init({
-	dsn: 'https://f41575bb027545c9ba470f71ceff5487@o1331410.ingest.sentry.io/6595592',
-	// or pull from params
-	// dsn: params.SENTRY_DSN,
-	// environment: params.INSTANCE_NAME,
-	integrations: [
-		// enable HTTP calls tracing
-		new Sentry.Integrations.Http({ tracing: true }),
-		// enable Express.js middleware tracing
-		new Tracing.Integrations.Express({ app }),
-	],
+// Sentry.init({
+// 	dsn: 'https://f41575bb027545c9ba470f71ceff5487@o1331410.ingest.sentry.io/6595592',
+// 	// or pull from params
+// 	// dsn: params.SENTRY_DSN,
+// 	// environment: params.INSTANCE_NAME,
+// 	integrations: [
+// 		// enable HTTP calls tracing
+// 		new Sentry.Integrations.Http({ tracing: true }),
+// 		// enable Express.js middleware tracing
+// 		new Tracing.Integrations.Express({ app }),
+// 	],
 
-	// Set tracesSampleRate to 1.0 to capture 100%
-	// of transactions for performance monitoring.
-	// We recommend adjusting this value in production
-	tracesSampleRate: 1.0,
-	// or pull from params
-	// tracesSampleRate: parseFloat(params.SENTRY_TRACES_SAMPLE_RATE),
-});
+// 	// Set tracesSampleRate to 1.0 to capture 100%
+// 	// of transactions for performance monitoring.
+// 	// We recommend adjusting this value in production
+// 	tracesSampleRate: 1.0,
+// 	// or pull from params
+// 	// tracesSampleRate: parseFloat(params.SENTRY_TRACES_SAMPLE_RATE),
+// });
 
 
 app.get('/', (request, response) => {
