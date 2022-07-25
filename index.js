@@ -40,6 +40,9 @@ app.use('/static', express.static('public'));
 
 
 app.get('/', (request, response) => {
+	console.log(request.ip);
+	console.log(request.ips);
+	console.log(request.originalUrl);
 	response.send('<h1>Test</h1>');
 });
 
@@ -60,10 +63,9 @@ app.get('/:name', (request, response, next) => {
 	next();
 });
 
-app.get('/api/notes', (request, response) => {
-	Note.find().then(notes => {
-		response.json(notes);
-	});
+app.get('/api/notes', async (request, response) => {
+	const notes = await Note.find({});
+	response.json(notes);
 });
 
 app.get('/api/notes/:id', (request, response, next) => {
@@ -79,7 +81,7 @@ app.get('/api/notes/:id', (request, response, next) => {
 	});
 });
 
-app.post('/api/notes', (request, response, next) => {
+app.post('/api/notes', async (request, response, next) => {
 	const noteData = request.body;
 
 	if (!noteData || !noteData.content) {
@@ -88,17 +90,18 @@ app.post('/api/notes', (request, response, next) => {
 		});
 	}
 
-	const note = new Note({
+	const newNote = new Note({
 		content: noteData.content,
 		important: typeof noteData.important !== 'undefined' ? noteData.important : false,
 		date: new Date()
 	});
 
-	note.save().then(savedNote => {
+	try {
+		const savedNote = await newNote.save();
 		response.json(savedNote);
-	}).catch(err => {
+	} catch (err) {
 		next(err);
-	});
+	}
 });
 
 app.put('/api/notes/:id', (request, response, next) => {
@@ -124,13 +127,16 @@ app.put('/api/notes/:id', (request, response, next) => {
 	});
 });
 
-app.delete('/api/notes/:id', (request, response, next) => {
+// eslint-disable-next-line no-unused-vars
+app.delete('/api/notes/:id', async (request, response, next) => {
 	const id = request.params.id;
-	Note.findByIdAndDelete(id).then(() => {
-		response.status(204).end();
-	}).catch(err => {
-		next(err);
-	});
+	await Note.findByIdAndDelete(id);
+	response.status(204).end();
+	// Note.findByIdAndDelete(id).then(() => {
+	// 	response.status(204).end();
+	// }).catch(err => {
+	// 	next(err);
+	// });
 });
 
 app.use(handleErrors);
@@ -139,10 +145,12 @@ app.use(handleErrors);
 app.use(notFound);
 
 const PORT = process.env.PORT || 3002;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
 
 process.on('uncaughtException', () => {
 	mongoose.connection.disconnect();
 });
+
+module.exports = { app, server };

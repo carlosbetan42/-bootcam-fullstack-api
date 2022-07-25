@@ -1,2 +1,2 @@
-const password = "root";
+const password = 'root';
 module.exports = password;
