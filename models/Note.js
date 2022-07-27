@@ -1,15 +1,13 @@
-/*, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	useFindAndModify: false,
-	useCreateIndex: true
-}*/
 const { model, Schema } = require('mongoose');
 
 const noteSchema = new Schema({
 	content: String,
 	date: Date,
-	important: Boolean
+	important: Boolean,
+	user: {
+		type: Schema.Types.ObjectId,
+		ref: 'User'
+	}
 });
 
 noteSchema.set('toJSON', {

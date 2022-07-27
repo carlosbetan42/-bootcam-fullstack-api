@@ -109,10 +109,10 @@ describe('notes', () => {
 	// });
 });
 
-afterAll(async () => {
-	await mongoose.connection.close();
+afterAll(() => {
+	mongoose.connection.close();
 });
 
-afterAll(async () => {
-	await server.close();
+afterAll(() => {
+	server.close();
 });

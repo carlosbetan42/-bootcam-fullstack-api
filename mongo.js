@@ -1,3 +1,10 @@
+/*, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	useFindAndModify: false,
+	useCreateIndex: true
+}*/
+
 const mongoose = require('mongoose');
 // const connectionString = process.env.MONGO_DB_URI;
 
